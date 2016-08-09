@@ -1,27 +1,24 @@
 package main
 
 import (
-        "log"
+        "fmt"
 
         "github.com/tarm/serial"
 )
 
 func main() {
-        c := &serial.Config{Name: "COM45", Baud: 115200}
+        c := &serial.Config{Name: "/dev/rfcomm0", Baud: 9600}
         s, err := serial.OpenPort(c)
         if err != nil {
-                log.Fatal(err)
+                fmt.Println(err)
         }
 
-        n, err := s.Write([]byte("test"))
-        if err != nil {
-                log.Fatal(err)
-        }
-
-        buf := make([]byte, 128)
-        n, err = s.Read(buf)
-        if err != nil {
-                log.Fatal(err)
-        }
-        log.Printf("%q", buf[:n])
+	for { //i := 0; i<100; i++ {
+		buf := make([]byte, 1)
+		n, err := s.Read(buf)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Printf("%x", buf[:n])
+	}
 }
